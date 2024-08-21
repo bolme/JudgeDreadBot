@@ -24,7 +24,7 @@ import frc.robot.libs.AbsoluteEncoder;
 public class SwerveModule extends SubsystemBase { // TODO: This probably does not need to be a subsystem
 
     private static final double kTurnD = .00;
-    private static double kTurnP = .008;
+    private static double kTurnP = .012;
     private static final double kDriveP = 0.09;
 
     private static double kDriveSetpointTolerance = .5;
