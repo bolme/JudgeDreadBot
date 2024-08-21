@@ -62,11 +62,11 @@ public class TeleopSwerveControl extends Command {
         }
 
         // TODO: Quick fix swaping the control  y should be forward and x should be strafe
-        double y = controller.getLeftX();
         double x = -controller.getLeftY();
+        double y = -controller.getLeftX();
 
-        swerveControTable.getEntry("forward_input").setDouble(y);
-        swerveControTable.getEntry("strafe_input").setDouble(x);
+        swerveControTable.getEntry("forward_input").setDouble(x);
+        swerveControTable.getEntry("strafe_input").setDouble(y);
 
         // Compute the inputs as the direction and magnitude of the vector
         double magnitude = Math.sqrt(y * y + x * x);
@@ -101,8 +101,8 @@ public class TeleopSwerveControl extends Command {
         }
 
         // Compute the inputs as the direction and magnitude of the vector
-        double forward = magnitude * y;
-        double strafe = magnitude * x;
+        double forward = magnitude * x;
+        double strafe = magnitude * y;
 
         // Compute the trigger input for precision controll
         double speedReductionTrigger = controller.getLeftTriggerAxis(); // range 0 to 1

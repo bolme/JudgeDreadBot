@@ -23,9 +23,9 @@ import frc.robot.libs.AbsoluteEncoder;
  */
 public class SwerveModule extends SubsystemBase { // TODO: This probably does not need to be a subsystem
 
-    private static final double kTurnD = .02;
-    private static final double kDriveP = 0.09;
+    private static final double kTurnD = .00;
     private static double kTurnP = .008;
+    private static final double kDriveP = 0.09;
 
     private static double kDriveSetpointTolerance = .5;
     private static double kTurnSetpointTolerance = .2;
@@ -34,6 +34,8 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
     private static final double kDriveFeedforwardKs = 0.084706;
     private static final double kDriveFeedforwardKv = 2.4433;
     private static final double kDriveFeedforwardKa = 0.10133;
+
+    private double velocity = 0;
 
     private String moduleID;
     private CANSparkMax turnMotor;
@@ -75,7 +77,7 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
     public SwerveModule(String moduleID, int analogID, int driveMotorID, int turnMotorID, double baseAngle) {
         this.moduleID = moduleID;
 
-        moduleTable = NetworkTableInstance.getDefault().getTable("SwerveDrive").getSubTable(moduleID);
+        moduleTable = NetworkTableInstance.getDefault().getTable("SwerveDrive").getSubTable(this.moduleID);
 
         driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
         driveMotor.setIdleMode(IdleMode.kBrake);
@@ -112,9 +114,9 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
     @Override
     public void periodic() {
 
-        moduleTable.getEntry("Speed Setpoint").setDouble(drivePID.getSetpoint());
-        moduleTable.getEntry("Speed Actual").setDouble(driveEncoder.getVelocity());
-        moduleTable.getEntry("Speed Error").setDouble(drivePID.getSetpoint() - driveEncoder.getVelocity());
+        //moduleTable.getEntry("Speed Setpoint").setDouble(drivePID.getSetpoint());
+        //moduleTable.getEntry("Speed Actual").setDouble(driveEncoder.getVelocity());
+        //moduleTable.getEntry("Speed Error").setDouble(drivePID.getSetpoint() - driveEncoder.getVelocity());
 
         moduleTable.getEntry("Angle Setpoint").setDouble(turnPID.getSetpoint());
         moduleTable.getEntry("Angle Actual").setDouble(turnEncoder.getPos());
@@ -124,6 +126,19 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
             driveEncoder.setVelocityConversionFactor(Constants.encoderRotationToMeters);
             driveEncoder.setPositionConversionFactor(42 * Constants.encoderRotationToMeters);
         }
+
+        // Get the angle of the turn motor then set the motor voltage
+        double wheel_angle = turnEncoder.getPos();
+        double turn_speed = turnPID.calculate(wheel_angle);
+        turnMotor.set(-turn_speed);
+
+        // Get the drive motor velocity and set the motor speed
+        drivePID.setSetpoint(velocity); // TODO remove?
+        double voltagePercent = driveFeedforward.calculate(velocity);
+        // Power should be adjusted based on the current angle error in the turn motor
+        double turnError = getAngleError();
+        voltagePercent = Math.cos( Math.toRadians(turnError) ) * voltagePercent;
+        driveMotor.setVoltage(voltagePercent);
     }
 
     /**
@@ -134,8 +149,8 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
      */
     public void setStates(SwerveModuleState state, boolean locked) {
         thisState = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(turnEncoder.getPos())); // TODO: Should this be getAbsolutePosition?
-        setAngle(thisState.angle.getDegrees());
-        setDriveSpeed(thisState.speedMetersPerSecond);
+        turnPID.setSetpoint(thisState.angle.getDegrees());
+        velocity = thisState.speedMetersPerSecond;
     }
 
 
@@ -144,9 +159,9 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
      * 
      * @param angle the desired angle in degrees
      */
-    public void setAngle(double angle) {
-        turnPID.setSetpoint(angle);
-        turnMotor.set(-turnPID.calculate(turnEncoder.getPos())); //TODO: Should this be getAbsolutePosition?
+    private void setAngle_deleteme(double angle) {
+        //turnPID.setSetpoint(angle);
+        //turnMotor.set(-turnPID.calculate(turnEncoder.getPos())); //TODO: Should this be getAbsolutePosition?
     }
 
     /**
@@ -154,18 +169,18 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
      * 
      * @param velocity the desired velocity of the drive motor
      */
-    public void setDriveSpeed(double velocity) {
+    private void setDriveSpeed_deleteme(double velocity) {
         // TODO: drivePID added too much instability
-        drivePID.setSetpoint(velocity); // TODO remove?
+        //drivePID.setSetpoint(velocity); // TODO remove?
 
-        double voltagePercent = driveFeedforward.calculate(velocity);
+        //double voltagePercent = driveFeedforward.calculate(velocity);
 
         // Power should be adjusted based on the current angle error in the turn motor
-        double turnError = getAngleError();
+        //double turnError = getAngleError();
         
-        voltagePercent = Math.cos( Math.toRadians(turnError) ) * voltagePercent;
+        //voltagePercent = Math.cos( Math.toRadians(turnError) ) * voltagePercent;
 
-        driveMotor.setVoltage(voltagePercent);
+        //driveMotor.setVoltage(voltagePercent);
     }
 
     /**
