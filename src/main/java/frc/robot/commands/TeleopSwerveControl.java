@@ -112,7 +112,7 @@ public class TeleopSwerveControl extends Command {
         // Scale the inputs to the maximum speed
         forward = Constants.maxSpeed * drive_reduction * forward;
         strafe = Constants.maxSpeed * drive_reduction * strafe;
-        rotation = Constants.maxChassisTurnSpeed * turn_reduction * rotation;
+        rotation = Constants.maxTurnSpeed * turn_reduction * rotation;
 
         swerveControTable.getEntry("forward_output").setDouble(forward);
         swerveControTable.getEntry("strafe_output").setDouble(strafe);

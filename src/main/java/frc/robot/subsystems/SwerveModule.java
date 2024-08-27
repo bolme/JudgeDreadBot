@@ -45,6 +45,9 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
     private AbsoluteEncoder turnEncoder;
     private RelativeEncoder driveEncoder;
 
+    private final double xLocationOffset;
+    private final double yLocationOffset;
+
     private final NetworkTable moduleTable; // NetworkTable for the module
 
     /**
@@ -74,7 +77,7 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
      * @param turnMotorID    The CAN ID for the turn motor.
      * @param baseAngle    The base angle offset for the turn encoder.
      */
-    public SwerveModule(String moduleID, int analogID, int driveMotorID, int turnMotorID, double baseAngle) {
+    public SwerveModule(String moduleID, int analogID, int driveMotorID, int turnMotorID, double baseAngle, double xLocationOffset, double yLocationOffset) {
         this.moduleID = moduleID;
 
         moduleTable = NetworkTableInstance.getDefault().getTable("SwerveDrive").getSubTable(this.moduleID);
@@ -95,6 +98,9 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
         turnEncoder = new AbsoluteEncoder(analogID);
         turnEncoder.setPositionOffset(baseAngle);
         driveEncoder = driveMotor.getEncoder();
+
+        this.xLocationOffset = xLocationOffset;
+        this.yLocationOffset = yLocationOffset;
 
         turnPID = new PIDController(kTurnP, 0, 0);
         // we don't use I or D

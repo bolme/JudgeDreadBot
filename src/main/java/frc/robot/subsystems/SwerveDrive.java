@@ -59,6 +59,7 @@ import frc.robot.sensors.NavX;
  * robot-specific and should be tuned accordingly.
  */
 public class SwerveDrive extends SubsystemBase {
+
     private static SwerveDrive instance = null;
 
     /**
@@ -73,18 +74,14 @@ public class SwerveDrive extends SubsystemBase {
         return instance;
     }
 
-    private final Translation2d[] locations = { // positive x is the front of the robot, positive y is the left of the robot
-            new Translation2d( Constants.wheelsLength/2.0,  -Constants.wheelsWidth/2.0),
-            new Translation2d(-Constants.wheelsLength/2.0,  -Constants.wheelsWidth/2.0),
-            new Translation2d( Constants.wheelsLength/2.0,  Constants.wheelsWidth/2.0),
-            new Translation2d(-Constants.wheelsLength/2.0,  Constants.wheelsWidth/2.0)
-    };
+    private final SwerveModule[] modules;
 
-    private SwerveModule[] modules = {
-            new SwerveModule("frontRight", 10, 7, 8, 25+15), 
-            new SwerveModule("backRight", 11, 5, 6, 50),
-            new SwerveModule("frontLeft", 13, 3, 4, -142),
-            new SwerveModule("backLeft", 12, 1, 2, -139-18),
+    private final Translation2d[] locations = { // positive x is the front of the robot, positive y is the left of the
+                                                // robot
+            new Translation2d(Constants.wheelsLength / 2.0, Constants.wheelsWidth / 2.0),
+            new Translation2d(Constants.wheelsLength / 2.0, -Constants.wheelsWidth / 2.0),
+            new Translation2d(-Constants.wheelsLength / 2.0, Constants.wheelsWidth / 2.0),
+            new Translation2d(-Constants.wheelsLength / 2.0, -Constants.wheelsWidth / 2.0)
     };
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -95,19 +92,7 @@ public class SwerveDrive extends SubsystemBase {
      * The numbers used
      * below are robot specific, and should be tuned.
      */
-    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            kinematics,
-            NavX.getInstance().getRotation2d(),
-            new SwerveModulePosition[] {
-                    modules[0].getSwerveModulePosition(),
-                    modules[1].getSwerveModulePosition(),
-                    modules[2].getSwerveModulePosition(),
-                    modules[3].getSwerveModulePosition()
-            },
-            new Pose2d(),
-
-            VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+    private final SwerveDrivePoseEstimator poseEstimator;
 
     // WPILib
     StructArrayPublisher<SwerveModuleState> actualStates = NetworkTableInstance.getDefault()
@@ -126,6 +111,35 @@ public class SwerveDrive extends SubsystemBase {
      * Constructs a new instance of the SwerveDrive subsystem.
      */
     private SwerveDrive() {
+
+        // fill in from constants
+        modules = new SwerveModule[4];
+
+        for (int i = 0; i < 4; i++) {
+            modules[i] = new SwerveModule(
+                    Constants.swerve_config.modules[i].label,
+                    Constants.swerve_config.modules[i].cancoderId,
+                    Constants.swerve_config.modules[i].driveMotorCanId,
+                    Constants.swerve_config.modules[i].turnMotorCanId,
+                    Constants.swerve_config.modules[i].turnEncoderAngleOffset,
+                    Constants.swerve_config.modules[i].xLocationOffset,
+                    Constants.swerve_config.modules[i].yLocationOffset);
+        }
+
+        poseEstimator = new SwerveDrivePoseEstimator(
+                kinematics,
+                NavX.getInstance().getRotation2d(),
+                new SwerveModulePosition[] {
+                        modules[0].getSwerveModulePosition(),
+                        modules[1].getSwerveModulePosition(),
+                        modules[2].getSwerveModulePosition(),
+                        modules[3].getSwerveModulePosition()
+                },
+                new Pose2d(),
+
+                VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
         NavX.getInstance();
     }
 
