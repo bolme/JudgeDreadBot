@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
@@ -111,6 +112,10 @@ public class SwerveModule extends SubsystemBase { // TODO: This probably does no
         drivePID = new PIDController(kDriveP, 0, kTurnD);
         drivePID.setTolerance(kDriveSetpointTolerance);
 
+    }
+
+    public Translation2d getOffsetLocation(){
+        return new Translation2d(xLocationOffset,yLocationOffset);
     }
 
     /**

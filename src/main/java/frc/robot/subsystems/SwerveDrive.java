@@ -76,7 +76,7 @@ public class SwerveDrive extends SubsystemBase {
 
     private final SwerveModule[] modules;
 
-    private final Translation2d[] locations = { // positive x is the front of the robot, positive y is the left of the
+    private final Translation2d[] locations_deleteme = { // positive x is the front of the robot, positive y is the left of the
                                                 // robot
             new Translation2d(Constants.wheelsLength / 2.0, Constants.wheelsWidth / 2.0),
             new Translation2d(Constants.wheelsLength / 2.0, -Constants.wheelsWidth / 2.0),
@@ -84,8 +84,7 @@ public class SwerveDrive extends SubsystemBase {
             new Translation2d(-Constants.wheelsLength / 2.0, -Constants.wheelsWidth / 2.0)
     };
 
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-            locations[0], locations[1], locations[2], locations[3]);
+    private final SwerveDriveKinematics kinematics;
 
     /*
      * Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings.
@@ -125,6 +124,13 @@ public class SwerveDrive extends SubsystemBase {
                     Constants.swerve_config.modules[i].xLocationOffset,
                     Constants.swerve_config.modules[i].yLocationOffset);
         }
+
+
+        kinematics = new SwerveDriveKinematics(
+            modules[0].getOffsetLocation(),
+            modules[1].getOffsetLocation(),
+            modules[2].getOffsetLocation(),
+            modules[3].getOffsetLocation());
 
         poseEstimator = new SwerveDrivePoseEstimator(
                 kinematics,
