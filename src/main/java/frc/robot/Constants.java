@@ -35,7 +35,7 @@ public interface Constants {
     public static final double botRadius = 0.86;
     // public static final double maxTurnSpeed = 90; // degrees per second
     public static final double maxAcceleration = 4000;
-    public static final double maxTurnSpeed = maxSpeed / botRadius; // Max Speed divided by the circumference a
+    public static final double maxTurnSpeed = 1.3 * maxSpeed / botRadius; // Max Speed divided by the circumference a
     public static final double wheelDiameter = .1016;
     public static final double gearRatio = 6.12;
     public static final double encoderRotationToMeters = 2 * Math.PI * ((wheelDiameter / 2) / gearRatio) / 42;

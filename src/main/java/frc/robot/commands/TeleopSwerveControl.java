@@ -18,7 +18,7 @@ public class TeleopSwerveControl extends Command {
 
     NetworkTable swerveControTable;
 
-    private static final double DEADZONE = 0.1;
+    private static final double kDeadzone = 0.06; // joystick deadzone
 
     private static TeleopSwerveControl instance = null;
 
@@ -71,7 +71,7 @@ public class TeleopSwerveControl extends Command {
         // Compute the inputs as the direction and magnitude of the vector
         double magnitude = Math.sqrt(y * y + x * x);
 
-        if(magnitude < DEADZONE){
+        if(magnitude < kDeadzone){
             magnitude = 0;
             x = 0;
             y = 0;
@@ -82,22 +82,24 @@ public class TeleopSwerveControl extends Command {
         }
 
         // Ensure the magnitude is within the range 0 to 1
-        if (magnitude > 1) {
-            magnitude = 1;
-        }
+        //if (magnitude > 1) {
+        //    magnitude = 1;
+        //}
 
         // Compute the rotation input
         double rotation = -controller.getRightX();
         swerveControTable.getEntry("rotation_input").setDouble(rotation);
 
-        if(rotation <  DEADZONE && rotation > -DEADZONE){
+        if(rotation <  kDeadzone && rotation > -kDeadzone){
             rotation = 0;
-        }
+        } 
+
+
 
         // Square the inputs (while preserving the sign) to increase fine control while permitting full power
         if(squaredInputs) {
             magnitude = magnitude * magnitude;
-            rotation = Math.copySign(rotation*rotation, rotation);
+            //rotation = Math.copySign(rotation*rotation, rotation);
         }
 
         // Compute the inputs as the direction and magnitude of the vector
@@ -105,9 +107,9 @@ public class TeleopSwerveControl extends Command {
         double strafe = magnitude * y;
 
         // Compute the trigger input for precision controll
-        double speedReductionTrigger = controller.getLeftTriggerAxis(); // range 0 to 1
-        double turn_reduction = 1.0 - 0.5 * speedReductionTrigger;
-        double drive_reduction = 1.0 - 0.5 * speedReductionTrigger;
+        double speedBoostTrigger = controller.getLeftTriggerAxis(); // range 0 to 1
+        double turn_reduction = 0.6 + 0.4 * speedBoostTrigger;
+        double drive_reduction = 0.6 + 0.4 * speedBoostTrigger;
 
         // Scale the inputs to the maximum speed
         forward = Constants.maxSpeed * drive_reduction * forward;
