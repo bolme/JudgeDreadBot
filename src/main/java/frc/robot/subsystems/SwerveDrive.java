@@ -76,8 +76,9 @@ public class SwerveDrive extends SubsystemBase {
 
     private final SwerveModule[] modules;
 
-    private final Translation2d[] locations_deleteme = { // positive x is the front of the robot, positive y is the left of the
-                                                // robot
+    private final Translation2d[] locations_deleteme = { // positive x is the front of the robot, positive y is the left
+                                                         // of the
+            // robot
             new Translation2d(Constants.wheelsLength / 2.0, Constants.wheelsWidth / 2.0),
             new Translation2d(Constants.wheelsLength / 2.0, -Constants.wheelsWidth / 2.0),
             new Translation2d(-Constants.wheelsLength / 2.0, Constants.wheelsWidth / 2.0),
@@ -125,12 +126,11 @@ public class SwerveDrive extends SubsystemBase {
                     Constants.swerve_config.modules[i].yLocationOffset);
         }
 
-
         kinematics = new SwerveDriveKinematics(
-            modules[0].getOffsetLocation(),
-            modules[1].getOffsetLocation(),
-            modules[2].getOffsetLocation(),
-            modules[3].getOffsetLocation());
+                modules[0].getOffsetLocation(),
+                modules[1].getOffsetLocation(),
+                modules[2].getOffsetLocation(),
+                modules[3].getOffsetLocation());
 
         poseEstimator = new SwerveDrivePoseEstimator(
                 kinematics,
@@ -176,8 +176,10 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds botSpeeds;
 
         if (fieldRelative) {
+            System.out.println("FIELD RELATIVE");
             botSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, NavX.getInstance().getRotation2d());
         } else {
+            System.out.println("BOT RELATIVE");
             botSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rot);
         }
 
@@ -200,6 +202,13 @@ public class SwerveDrive extends SubsystemBase {
      */
     public void arcadeDrive(double xSpeed, double rot) {
         drive(xSpeed, 0.0, rot, false);
+    }
+
+    /**
+     * Stops the swerve drive system by setting all module states to zero.
+     */
+    public void stop() {
+        this.drive(0, 0, 0, false);
     }
 
     /**

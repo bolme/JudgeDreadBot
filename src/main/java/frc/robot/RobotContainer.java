@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.LeaveZone;
 import frc.robot.commands.TeleopSwerveControl;
 import frc.robot.commands.ToggleFieldOriented;
 // import frc.robot.commands.ChoreoAuto;
@@ -46,7 +47,8 @@ public class RobotContainer {
      */
     public RobotContainer() {
 
-        // autoChooser.addOption("StraightLine", new ChoreoAuto("StraightLine"));
+        autoChooser.addOption("LeaveZone", new LeaveZone(m_robotDrive));
+        //autoChooser.addOption("StraightLine", new ChoreoAuto("StraightLine"));
         // autoChooser.addOption("TrunBackwards", new ChoreoAuto("TurnBackward"));
         SmartDashboard.putData("Auto", autoChooser);
         SmartDashboard.putData(m_field);
@@ -80,7 +82,9 @@ public class RobotContainer {
         new JoystickButton(m_DriverController, XboxController.Button.kBack.value)
                 .onTrue(new ToggleFieldOriented());
 
-    }
+                new JoystickButton(m_DriverController, XboxController.Button.kA.value)
+                .whileTrue(getAutonomousCommand());
+            }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

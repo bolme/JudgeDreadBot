@@ -29,7 +29,7 @@ public class TeleopSwerveControl extends Command {
         return instance;
     }
 
-    public TeleopSwerveControl() {
+    private TeleopSwerveControl() {
         this.controller = RobotContainer.m_DriverController;
         swerveDrive = SwerveDrive.getInstance();
 
@@ -39,6 +39,10 @@ public class TeleopSwerveControl extends Command {
     }
 
     public void toggleFieldOriented() {
+        System.out.println("TOGGLE");
+        System.out.println("TOGGLE");
+        System.out.println("TOGGLE");
+        System.out.println("TOGGLE");
         fieldOriented = !fieldOriented;
     }
 
@@ -108,8 +112,8 @@ public class TeleopSwerveControl extends Command {
 
         // Compute the trigger input for precision controll
         double speedBoostTrigger = controller.getLeftTriggerAxis(); // range 0 to 1
-        double turn_reduction = 0.6 + 0.4 * speedBoostTrigger;
-        double drive_reduction = 0.6 + 0.4 * speedBoostTrigger;
+        double turn_reduction = 1.0 - 0.6 * speedBoostTrigger;
+        double drive_reduction = 1.0 - 0.6 * speedBoostTrigger;
 
         // Scale the inputs to the maximum speed
         forward = Constants.maxSpeed * drive_reduction * forward;
