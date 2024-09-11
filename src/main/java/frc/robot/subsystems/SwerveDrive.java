@@ -176,10 +176,10 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds botSpeeds;
 
         if (fieldRelative) {
-            System.out.println("FIELD RELATIVE");
+            //System.out.println("FIELD RELATIVE");
             botSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, NavX.getInstance().getRotation2d());
         } else {
-            System.out.println("BOT RELATIVE");
+            //System.out.println("BOT RELATIVE");
             botSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rot);
         }
 

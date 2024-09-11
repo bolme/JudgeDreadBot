@@ -48,20 +48,20 @@ public class RobotContainer {
     public RobotContainer() {
 
         autoChooser.addOption("LeaveZone", new LeaveZone(m_robotDrive));
-        //autoChooser.addOption("StraightLine", new ChoreoAuto("StraightLine"));
+        // autoChooser.addOption("StraightLine", new ChoreoAuto("StraightLine"));
         // autoChooser.addOption("TrunBackwards", new ChoreoAuto("TurnBackward"));
-        SmartDashboard.putData("Auto", autoChooser);
+        SmartDashboard.putData("Auto Selector", autoChooser);
         SmartDashboard.putData(m_field);
 
         // Run this line once to set the name then comment out
         // Preferences.setString("RobotName", "Unknown");
         robotName = Preferences.getString("RobotName", "Unknown");
 
-        if (robotName == "Unknown")
-            // RobotController.setBrownoutVoltage(7.5);
+        // if (robotName == "Unknown")
+        // RobotController.setBrownoutVoltage(7.5);
 
-            // Configure the button bindings
-            configureButtonBindings();
+        // Configure the button bindings
+        configureButtonBindings();
 
         // Configure default commands
         m_robotDrive.setDefaultCommand(TeleopSwerveControl.getInstance());
@@ -82,9 +82,9 @@ public class RobotContainer {
         new JoystickButton(m_DriverController, XboxController.Button.kBack.value)
                 .onTrue(new ToggleFieldOriented());
 
-                new JoystickButton(m_DriverController, XboxController.Button.kA.value)
-                .whileTrue(getAutonomousCommand());
-            }
+        new JoystickButton(m_DriverController, XboxController.Button.kA.value)
+                .whileTrue(new LeaveZone(m_robotDrive));
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -92,7 +92,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        //return autoChooser.getSelected();
+        return new LeaveZone(m_robotDrive);
         // return camera.pathfindToAprilTag();
         // return new Pathfinding(new Pose2d(4.5, 6.5, new Rotation2d(0)), camera,
         // m_robotDrive);

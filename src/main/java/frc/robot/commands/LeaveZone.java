@@ -22,7 +22,7 @@ public class LeaveZone extends Command {
 
     @Override
     public void execute() {
-        driveSubsystem.arcadeDrive(0.5, 0.0);
+        driveSubsystem.arcadeDrive(0.75, 0.0);
     }
 
     @Override

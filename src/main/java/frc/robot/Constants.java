@@ -25,7 +25,7 @@ public interface Constants {
     public static final double gearRatio = 6.12;
     public static final double encoderRotationToMeters = 2 * Math.PI * ((wheelDiameter / 2) / gearRatio) / 42;
 
-    public static final double maxSpeed = 6.0; // In meters per second, determined from the free speed of the motors
+    public static final double maxSpeed = 4.0; // In meters per second, determined from the free speed of the motors
     public static final double maxTurnSpeed = 1.3 * maxSpeed / botRadius; // Max Speed divided by the circumference a circle with the radius of the bot
 
     // Use these limits to restrict the current draw of the bot
