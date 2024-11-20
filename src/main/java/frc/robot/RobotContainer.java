@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.BiegenSieNachLinksAb;
 import frc.robot.commands.GehenSie;
 import frc.robot.commands.Spinny;
 import frc.robot.commands.TeleopSwerveControl;
@@ -73,8 +74,10 @@ public class RobotContainer {
         .onTrue(new ToggleFieldOriented());
     new JoystickButton(m_DriverController, XboxController.Button.kA.value)
         .whileTrue(new GehenSie());
-         new JoystickButton(m_DriverController, XboxController.Button.kB.value)
+    new JoystickButton(m_DriverController, XboxController.Button.kB.value)
         .whileTrue(new Spinny());
+        new JoystickButton(m_DriverController, XboxController.Button.kY.value)
+        .whileTrue(new BiegenSieNachLinksAb());
   }
 
   /**
