@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.GehenSie;
+import frc.robot.commands.Spinny;
 import frc.robot.commands.TeleopSwerveControl;
 import frc.robot.commands.ToggleFieldOriented;
 // import frc.robot.commands.ChoreoAuto;
@@ -26,7 +28,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems
   public static SwerveDrive m_robotDrive = SwerveDrive.getInstance();
-  //public SystemMonitor mSystemMonitor = SystemMonitor.getInstance();
+  // public SystemMonitor mSystemMonitor = SystemMonitor.getInstance();
 
   // The driver's controller
   public static XboxCotroller m_DriverController = new XboxCotroller(0);
@@ -35,7 +37,7 @@ public class RobotContainer {
   SendableChooser<Command> autoChooser = new SendableChooser<>();
   Field2d m_field = new Field2d();
 
-  //private Camera camera = Camera.getInstance();
+  // private Camera camera = Camera.getInstance();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -48,7 +50,7 @@ public class RobotContainer {
     SmartDashboard.putData(m_field);
 
     // RobotController.setBrownoutVoltage(7.5);
-    
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -69,7 +71,10 @@ public class RobotContainer {
 
     new JoystickButton(m_DriverController, XboxController.Button.kBack.value)
         .onTrue(new ToggleFieldOriented());
-        
+    new JoystickButton(m_DriverController, XboxController.Button.kA.value)
+        .whileTrue(new GehenSie());
+         new JoystickButton(m_DriverController, XboxController.Button.kB.value)
+        .whileTrue(new Spinny());
   }
 
   /**
@@ -79,9 +84,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
-    //return camera.pathfindToAprilTag();
-    // return new Pathfinding(new Pose2d(4.5, 6.5, new Rotation2d(0)), camera, m_robotDrive);
-  
+    // return camera.pathfindToAprilTag();
+    // return new Pathfinding(new Pose2d(4.5, 6.5, new Rotation2d(0)), camera,
+    // m_robotDrive);
+
   }
 
   public void periodic() {
